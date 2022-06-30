@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd"
+  default-init-method="defaultCustomInit"
+  default-destroy-method="defaultCustomDestroy"    
+>
+  
+  <context:annotation-config/>
+
+  <!-- #1 - Bean Definition -->
+  <bean id="mysql" class="com.bootcamp.spring.model.Mysql">
+  	<property name="url" value="jdbc:mysql://ahmetarabaci/mysqldb" />
+  	<property name="user" value="mysql_user" />
+  	<property name="password" value="mysql_pass" />
+  </bean>
+  
+  <!-- #2 - Constructor Injection -->
+  <bean id="mysqlWithConstructor" class="com.bootcamp.spring.model.Mysql">
+  	<constructor-arg name="url" value="jdbc:mysql://ahmetarabaci/mysqldb" />
+  	<constructor-arg name="user" value="mysql_user1" />
+  	<constructor-arg name="password" value="mysql_pass1" />
+  </bean>
+  
+  <!--  #3 - 'ref' Usage -->
+  <bean id="info" class="com.bootcamp.spring.model.Info">
+  	<property name="dbType" value="MySQL" />
+  	<property name="port" value="3310" />
+  </bean>
+  <bean id="info2" class="com.bootcamp.spring.model.Info">
+  	<property name="dbType" value="MySQL" />
+  	<property name="port" value="3311" />
+  </bean>
+  <bean id="mysqlRefUsage" class="com.bootcamp.spring.model.Mysql">
+  	<property name="url" value="jdbc:mysql://ahmetarabaci/mysqldb" />
+  	<property name="user" value="mysql_user" />
+  	<property name="password" value="mysql_pass" />
+  	<property name="info" ref="info" />
+  </bean>
+  
+  <!--  #4 - Inner Bean Usage -->
+  <bean id="mysqlInnerBeanUsage" class="com.bootcamp.spring.model.Mysql">
+  	<property name="url" value="jdbc:mysql://ahmetarabaci/mysqldb" />
+  	<property name="user" value="mysql_user" />
+  	<property name="password" value="mysql_pass" />
+  	<property name="info">
+  		<bean class="com.bootcamp.spring.model.Info">
+  			<property name="dbType" value="MySQL" />
+  			<property name="port" value="3307" />
+  		</bean>
+  	</property>
+  </bean>
+  
+  <!--  #5 - Alias Usage -->
+  <bean id="mysqlAliasUsage" class="com.bootcamp.spring.model.Mysql" name="mysqlAliasUsage2">
+  	<property name="url" value="jdbc:mysql://ahmetarabaci/mysqldb" />
+  	<property name="user" value="mysql_user3" />
+  	<property name="password" value="mysql_pass3" />
+  </bean>
+  <alias name="mysqlAliasUsage" alias="mysqlAliasUsage1"/>
+  
+  <!-- #6 - List Usage -->
+  <bean id="log1" class="com.bootcamp.spring.model.Logger">
+  	<property name="log" value="Mysql log1 has been printed." />  	
+  </bean>
+  <bean id="log2" class="com.bootcamp.spring.model.Logger">
+  	<property name="log" value="Mysql log2 has been printed." />  	
+  </bean>
+  <bean id="mysqlListUsage" class="com.bootcamp.spring.model.Mysql">
+  	<property name="url" value="jdbc:mysql://ahmetarabaci/mysqldb" />
+  	<property name="user" value="mysql_user3" />
+  	<property name="password" value="mysql_pass3" />
+  	<property name="loggerList">
+  		<list>
+  			<ref bean="log1" />
+  			<ref bean="log2" />
+  		</list>  		
+  	</property>
+  	<property name="portList">
+  		<list>
+  			<value>3309</value>
+  			<value>3310</value>
+  		</list>
+  	</property>
+  </bean>
+  
+  <!-- #7 - Autowiring -->
+  <bean id="mysqlAutowireUsage" class="com.bootcamp.spring.model.Mysql" autowire="constructor">
+  	<constructor-arg name="url" value="jdbc:mysql://ahmetarabaci/mysqldb" />
+  	<constructor-arg name="user" value="mysql_user4" />
+  	<constructor-arg name="password" value="mysql_pass4" />
+  </bean>
+  
+  <!--  #8 - Bean Scope -->
+  <bean id="mysqlScopeUsage" class="com.bootcamp.spring.model.Mysql" scope="prototype">
+  	<property name="url" value="jdbc:mysql://ahmetarabaci/mysqldb" />
+  	<property name="user" value="mysql_user5" />
+  	<property name="password" value="mysql_pass5" />
+  </bean>
+  
+  <!-- #9 - Bean Inheritance -->
+  <bean id="config" class="com.bootcamp.spring.model.Config">
+  	<property name="user" value="mysql_user_conf" />
+  	<property name="password" value="mysql_pass_conf" />
+  </bean> 
+  
+  <bean id="mysqlInheritanceUsage" class="com.bootcamp.spring.model.Mysql" parent="config"
+  	init-method="customInit" destroy-method="customDestroy"
+  >
+  	<property name="url" value="jdbc:mysql://ahmetarabaci/mysqldb" />  	
+  	<property name="loggerList">
+  		<list>
+  			<ref bean="log1" />
+  			<ref bean="log2" />
+  		</list>  		
+  	</property>
+  	<property name="portList">
+  		<list>
+  			<value>3309</value>
+  			<value>3310</value>
+  		</list>
+  	</property>
+  </bean>
+  
+</beans>
